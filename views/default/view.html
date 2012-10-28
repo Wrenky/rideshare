@@ -2,3 +2,9 @@
 <h1>Ride to {{=ride.destination}}, leaving at {{=ride.departure_time}}</h1>
 <h2>Price: {{=ride.price}}</h2>
 <p>
+
+
+
+{{if ride.owner.id == user_id:}}
+  {{=P(A('Delete it', _href=URL('delete', args=[ride.id])))}}
+{{pass}}

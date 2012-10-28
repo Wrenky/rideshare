@@ -37,7 +37,24 @@ def add():
 def view():
     rides = db.ride(request.args[0]) or redirect(URL('index'))
     return dict(ride=rides, user_id = auth.user_id)
-    
+ 
+
+@auth.requires_login()
+def delete():
+    ride = db.ride(request.args[0]) or redirect(URL('index'))
+    if auth.user_id != ride.owner.id:
+        session.flash = T("You cannot delete other people's rides!")
+        redirect(URL('index'))
+    form = SQLFORM.factory(Field('Confirm_deletion', 'boolean', default=False))
+    if form.process().accepted:
+        db(db.ride.id == request.args[0]).delete()
+        db.commit()
+        session.flash = T('The item has been deleted')
+        redirect(URL('index'))
+    return dict(form=form, ride=ride, user=auth.user)
+              
+                     
+                                   
     
 def user():
     """
