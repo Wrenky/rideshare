@@ -1,8 +1,9 @@
 {{extend 'layout.html'}}
 Available Rides: <P>
+
 <ul>
 {{for r in ride:}}
-<li>{{=A(r.name, _href=URL('view', args=[r.id]))}}
+    <li>{{=A(r.destination, _href=URL('view', args=[r.id]))}}
 </li>
 {{pass}}
 </ul>

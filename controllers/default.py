@@ -18,17 +18,26 @@ def index():
     return auth.wiki()
     """
     response.flash = T("Welcome to Santa Cruz ridesharing!")
-    ride = db().select(db.ride.ALL)
-    return dict(ride=ride)
+    rides = db().select(db.ride.ALL)
+    return dict(ride=rides)
 
     
-
+@auth.requires_login()
 def add():
     form = SQLFORM(db.ride)
     if form.process().accepted:
         session.flash = T('inserted!')
         redirect(URL('index'))
+##    else:
+##        session.flash = T('Didnt work- Try again')
+##        redirect(URL('index'))
     return dict(form=form)
+
+        
+def view():
+    rides = db.ride(request.args[0]) or redirect(URL('index'))
+    return dict(ride=rides, user_id = auth.user_id)
+    
     
 def user():
     """

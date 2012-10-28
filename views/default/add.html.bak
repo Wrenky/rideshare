@@ -1,0 +1,4 @@
+{{extend 'layout.html'}}
+<h1>Add a ride:</h1>
+{{=BEAUTIFY(response._vars)}}
+{{=form}}
