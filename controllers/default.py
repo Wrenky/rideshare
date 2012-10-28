@@ -17,9 +17,19 @@ def index():
     if you need a simple wiki simple replace the two lines below with:
     return auth.wiki()
     """
-    response.flash = T("Welcome to web2py!")
-    return dict(message=T('Hello World'))
+    response.flash = T("Welcome to Santa Cruz ridesharing!")
+    ride = db().select(db.ride.ALL)
+    return dict(ride=ride)
 
+    
+
+def add():
+    form = SQLFORM(db.ride)
+    if form.process().accepted:
+        session.flash = T('inserted!')
+        redirect(URL('index'))
+    return dict(form=form)
+    
 def user():
     """
     exposes:

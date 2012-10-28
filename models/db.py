@@ -86,8 +86,8 @@ use_janrain(auth,filename='private/janrain.key')
 
 db.define_table('people',
                 Field('name', requires = 'string'),
-                Field('about me', requires = 'string'),
-                Field('email', auth_user.email),
+                Field('aboutMe', requires = 'string'),
+                Field('email'),
                 Field('sex', requires = 'string'),
                 Field('age', requires = 'integer'))
                 
@@ -98,5 +98,8 @@ db.define_table('ride',
                 Field('completed'),
                 Field('comments'),
                 Field('price'),
-                Field('numberSeatsOpen', requires ='integer'),
+                Field('number_of_seats_open', requires ='integer'),
                 Field('owner', requires = 'reference people'))
+                
+db.ride.completed.writable = db.ride.completed.readable = False
+db.ride.owner.writable = db.ride.owner.readable = False
