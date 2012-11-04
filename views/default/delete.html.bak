@@ -1,0 +1,4 @@
+{{extend 'layout.html'}}
+
+<h1>{{=ride.destination}}(${{=ride.price}})</h1>
+{{=form}}

@@ -6,5 +6,9 @@
 
 
 {{if ride.owner.id == user_id:}}
-  {{=P(A('Delete it', _href=URL('delete', args=[ride.id])))}}
+  {{=P(A('Delete this ride', _href=URL('delete', args=[ride.id])))}}
+{{pass}}
+<p>
+{{if ride.owner.id == user_id:}}
+  {{=P(A('Update this ride', _href=URL('update', args=[ride.id])))}}
 {{pass}}

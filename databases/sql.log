@@ -53,3 +53,30 @@ CREATE TABLE auth_cas(
     renew CHAR(1)
 );
 success!
+timestamp: 2012-10-27T21:05:30.526831
+CREATE TABLE people(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name CHAR(512),
+    aboutMe CHAR(512),
+    email CHAR(512),
+    sex CHAR(512),
+    age CHAR(512)
+);
+success!
+timestamp: 2012-10-27T21:05:30.578935
+CREATE TABLE ride(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    meeting_location CHAR(512),
+    departure_time CHAR(512),
+    trip_length CHAR(512),
+    completed CHAR(512),
+    comments CHAR(512),
+    price CHAR(512),
+    numberSeatsOpen CHAR(512),
+    owner CHAR(512)
+);
+success!
+timestamp: 2012-10-27T21:47:27.575049
+ALTER TABLE ride ADD number_of_seats_open CHAR(512);
+timestamp: 2012-10-28T12:38:26.456737
+ALTER TABLE ride ADD destination CHAR(512);
