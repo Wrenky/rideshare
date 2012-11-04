@@ -52,8 +52,16 @@ def delete():
         session.flash = T('The item has been deleted')
         redirect(URL('index'))
     return dict(form=form, ride=ride, user=auth.user)
-              
-                     
+
+                            
+@auth.requires_login()
+def update():
+    record = db.ride(request.args(0)) or redirect(URL('index'))
+    form = SQLFORM(db.ride, record)
+    if form.process().accepted:
+        session.flash = T('The item has been deleted')
+        redirect(URL('index'))
+    return dict(form=form)                
                                    
     
 def user():
