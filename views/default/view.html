@@ -1,14 +1,25 @@
 {{extend 'layout.html'}}
-<h1>Ride to {{=ride.destination}}, leaving at {{=ride.departure_time}}</h1>
-<h2>Price: {{=ride.price}}</h2>
+
+<h3>Details</h3>
+<font face= "arial" size="4">
+<ul>
+    <li>Destination:   {{=ride.destination}}</li>
+    <li>Departure:   {{=ride.departure_time}}</li>
+    <li>Price:   {{=ride.price}}</li>
+    <li>Driver:   {{=ride.owner.username}}</li>
+</ul>
+
 <p>
-
-
-
-{{if ride.owner.id == user_id:}}
-  {{=P(A('Delete this ride', _href=URL('delete', args=[ride.id])))}}
-{{pass}}
+    <h2>Notes:</h2>
 <p>
+    {{=ride.comments}}
+<p>    
+    
+</font>
+<font face= "arial" size="2">
 {{if ride.owner.id == user_id:}}
-  {{=P(A('Update this ride', _href=URL('update', args=[ride.id])))}}
+  {{=(A('Delete this ride', _href=URL('delete', args=[ride.id])))}} 
+  or
+  {{=(A('Update this ride', _href=URL('update', args=[ride.id])))}}
 {{pass}}
+</font>

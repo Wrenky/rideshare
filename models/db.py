@@ -39,10 +39,20 @@ response.generic_patterns = ['*'] if request.is_local else []
 ## (more options discussed in gluon/tools.py)
 #########################################################################
 
+
+
+
+
 from gluon.tools import Auth, Crud, Service, PluginManager, prettydate
 auth = Auth(db)
 crud, service, plugins = Crud(db), Service(), PluginManager()
 
+
+auth.settings.extra_fields[auth.settings.table_user_name] = [
+    Field('username', 'string', requires=IS_LENGTH(312)),
+    Field('about_me', 'text')]
+    
+    
 ## create all tables needed by auth if not custom tables
 auth.define_tables(username=False, signature=False)
 

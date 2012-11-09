@@ -3,7 +3,7 @@ List of available rides: <P>
 
 <ul>
 {{for r in ride:}}
-    <li>{{=A(r.destination, _href=URL('view', args=[r.id]))}}
+    <li>{{=A(r.destination, _href=URL('view', args=[r.id]))}}, leaving at {{=r.departure_time}}. Price: {{=r.price}}
 </li>
 {{pass}}
 </ul>
