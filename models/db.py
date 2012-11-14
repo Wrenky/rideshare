@@ -49,6 +49,7 @@ crud, service, plugins = Crud(db), Service(), PluginManager()
 
 
 auth.settings.extra_fields[auth.settings.table_user_name] = [
+    Field('profile_picture', 'upload'),
     Field('about_me', 'text')]
     
     

@@ -1,9 +1,18 @@
 {{extend 'layout.html'}}
-WE NEED TO ADD PICTURES!
+
 
 <h1> {{=user.first_name}} {{=user.last_name}}</h1>
 <P>
-{{=user.email}}
+
+<img width="200px"
+     src="{{=URL('download', args=user.profile_picture)}}" />
+
 <P>
-{{=user.about_me}}
+<center><h3>About Me:</h3></center>
+<P>
+<center>{{=user.about_me}}</center>
+<P>
+Contact me at:
+<P>
+{{=user.email}}
 <P>
