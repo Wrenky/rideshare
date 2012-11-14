@@ -1,7 +1,5 @@
 {{extend 'layout.html'}}
-Available Rides: <P>
-
-
+List of available rides: <P>
 
 <ul>
 {{for r in ride:}}

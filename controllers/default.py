@@ -37,7 +37,11 @@ def add():
 def view():
     rides = db.ride(request.args[0]) or redirect(URL('index'))
     return dict(ride=rides, user_id = auth.user_id)
- 
+    
+    
+def view_user():
+     user = db.auth_user(request.args[0]) or redirect(URL('index'))
+     return dict(user = user)
 
 @auth.requires_login()
 def delete():

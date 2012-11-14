@@ -1,0 +1,6 @@
+{{extend 'layout.html'}}
+WE NEED TO ADD PICTURES!
+
+<h1> {{=user.first_name}} {{=user.last_name}}</h1>
+{{=user.email}}
+{{=user.about_me}}

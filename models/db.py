@@ -49,7 +49,6 @@ crud, service, plugins = Crud(db), Service(), PluginManager()
 
 
 auth.settings.extra_fields[auth.settings.table_user_name] = [
-    Field('username', 'string', requires=IS_LENGTH(312)),
     Field('about_me', 'text')]
     
     

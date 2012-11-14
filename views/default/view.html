@@ -3,10 +3,10 @@
 <h3>Details</h3>
 <font face= "arial" size="4">
 <ul>
-    <li>Destination:   {{=ride.destination}}</li>
+    <li>Destination: {{=ride.destination}}</li>
     <li>Departure:   {{=ride.departure_time}}</li>
-    <li>Price:   {{=ride.price}}</li>
-    <li>Driver:   {{=ride.owner.username}}</li>
+    <li>Price:       {{=ride.price}}</li>
+    <li>Driver:      {{=A(ride.owner.first_name, " ", ride.owner.last_name, _href=URL('view_user', args=[ride.owner.id]))}}</li>
 </ul>
 
 <p>
