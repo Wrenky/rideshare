@@ -50,7 +50,8 @@ crud, service, plugins = Crud(db), Service(), PluginManager()
 
 auth.settings.extra_fields[auth.settings.table_user_name] = [
     Field('profile_picture', 'upload'),
-    Field('about_me', 'text')]
+    Field('about_me', 'text'),
+    Field('sex', 'string', requires=IS_IN_SET(['Male', 'Female']))]
     
     
 ## create all tables needed by auth if not custom tables

@@ -38,12 +38,14 @@ def view():
     rides = db.ride(request.args[0]) or redirect(URL('index'))
     return dict(ride=rides, user_id = auth.user_id)
     
-    
+@auth.requires_login()
 def view_user():
      user = db.auth_user(request.args[0]) or redirect(URL('index'))
      return dict(user = user)
 
+
 def download(): return response.download(request,db)
+
 
 @auth.requires_login()
 def delete():

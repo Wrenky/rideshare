@@ -1,10 +1,10 @@
 {{extend 'layout.html'}}
 List of available rides: <P>
-DATE SELECTOR
 <ul>
 {{for r in ride:}}
-    <li>{{=A(r.destination, _href=URL('view', args=[r.id]))}}, leaving at {{=r.departure_time}}. Price: {{=r.price}}
+    <li>{{=A(r.destination, _href=URL('view', args=[r.id]))}}, leaving {{=r.meeting_location}} at {{=r.departure_time}}. Price: {{=r.price}}
 </li>
 {{pass}}
 </ul>
+
 <p>{{=A('Add a ride!', _href=URL('add'))}}</p>
