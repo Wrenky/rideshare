@@ -83,3 +83,7 @@ timestamp: 2012-11-08T14:47:05.328012
 ALTER TABLE auth_user ADD username CHAR(512);
 timestamp: 2012-11-08T14:50:46.896582
 ALTER TABLE auth_user ADD about_me TEXT;
+timestamp: 2012-11-28T14:12:28.610000
+ALTER TABLE auth_user ADD sex CHAR(512);
+timestamp: 2012-11-28T14:12:28.623000
+ALTER TABLE auth_user ADD profile_picture CHAR(512);
