@@ -21,6 +21,53 @@ def index():
     rides = db().select(db.ride.ALL)
     return dict(ride=rides)
 
+def index1():
+
+    response.flash = T("Welcome to Santa Cruz ridesharing!")
+    rides = db().select(db.ride.ALL, orderby=db.ride.destination)
+    return dict(ride=rides)
+    
+def index2():
+
+    response.flash = T("Welcome to Santa Cruz ridesharing!")
+    rides = db().select(db.ride.ALL, orderby=db.ride.meeting_location)
+    return dict(ride=rides)
+    
+def index3():
+
+    response.flash = T("Welcome to Santa Cruz ridesharing!")
+    rides = db().select(db.ride.ALL, orderby=db.ride.departure_time)
+    return dict(ride=rides)
+    
+def index4():
+
+    response.flash = T("Welcome to Santa Cruz ridesharing!")
+    rides = db().select(db.ride.ALL, orderby=db.ride.price)
+    return dict(ride=rides)
+    
+def index5():
+
+    response.flash = T("Welcome to Santa Cruz ridesharing!")
+    rides = db().select(db.ride.ALL, orderby=~db.ride.destination)
+    return dict(ride=rides)
+    
+def index6():
+
+    response.flash = T("Welcome to Santa Cruz ridesharing!")
+    rides = db().select(db.ride.ALL, orderby=~db.ride.meeting_location)
+    return dict(ride=rides)
+    
+def index7():
+
+    response.flash = T("Welcome to Santa Cruz ridesharing!")
+    rides = db().select(db.ride.ALL, orderby=~db.ride.departure_time)
+    return dict(ride=rides)
+    
+def index8():
+
+    response.flash = T("Welcome to Santa Cruz ridesharing!")
+    rides = db().select(db.ride.ALL, orderby=~db.ride.price)
+    return dict(ride=rides)
     
 @auth.requires_login()
 def add():

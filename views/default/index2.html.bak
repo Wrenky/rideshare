@@ -1,6 +1,6 @@
 {{extend 'layout.html'}}
 List of available rides: <P></P>
-<p><a href=index1>Destination</a> <a href= index2>Meeting Place</a> <a href=index3>Time</a> <a href=index4>Price</a></p>
+<p><a href=index1>Destination</a> <a href= index6>Meeting Place</a> <a href=index3>Time</a> <a href=index4>Price</a></p>
 
 <ul>
 {{for r in ride:}}

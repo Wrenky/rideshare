@@ -21,6 +21,29 @@ def index():
     rides = db().select(db.ride.ALL)
     return dict(ride=rides)
 
+def index1():
+
+    response.flash = T("Welcome to Santa Cruz ridesharing!")
+    rides = db().select(db.ride.ALL, orderby=db.ride.destination)
+    return dict(ride=rides)
+    
+def index2():
+
+    response.flash = T("Welcome to Santa Cruz ridesharing!")
+    rides = db().select(db.ride.ALL, orderby=db.ride.meeting_location)
+    return dict(ride=rides)
+    
+def index3():
+
+    response.flash = T("Welcome to Santa Cruz ridesharing!")
+    rides = db().select(db.ride.ALL, orderby=db.ride.departure_time)
+    return dict(ride=rides)
+    
+def index4():
+
+    response.flash = T("Welcome to Santa Cruz ridesharing!")
+    rides = db().select(db.ride.ALL, orderby=db.ride.meeting_location)
+    return dict(ride=rides)
     
 @auth.requires_login()
 def add():
@@ -37,7 +60,15 @@ def add():
 def view():
     rides = db.ride(request.args[0]) or redirect(URL('index'))
     return dict(ride=rides, user_id = auth.user_id)
- 
+    
+@auth.requires_login()
+def view_user():
+     user = db.auth_user(request.args[0]) or redirect(URL('index'))
+     return dict(user = user)
+
+
+def download(): return response.download(request,db)
+
 
 @auth.requires_login()
 def delete():
@@ -61,7 +92,7 @@ def update():
     if form.process().accepted:
         session.flash = T('The item has been deleted')
         redirect(URL('index'))
-    return dict(form=form, ride=ride, user=auth.user)                
+    return dict(form=form)                
                                    
     
 def user():
