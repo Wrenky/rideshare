@@ -5,8 +5,9 @@
 ## Customize your APP title, subtitle and menus here
 #########################################################################
 
-response.title = ' '.join(word.capitalize() for word in request.application.split('_'))
-response.subtitle = T('customize me!')
+#response.title = ' '.join(word.capitalize() for word in request.application.split('_'))
+response.title = T('Rideshare')
+response.subtitle = T('Where all your rides come true!')
 
 ## read more at http://dev.w3.org/html5/markup/meta.name.html
 response.meta.author = 'Your Name <you@example.com>'
@@ -22,7 +23,7 @@ response.google_analytics_id = None
 #########################################################################
 
 response.menu = [
-    (T('Home'), False, URL('default','index'), [])
+    (T('Overview'), False, URL('default','index'), [])
     ]
 
 #########################################################################
@@ -98,4 +99,3 @@ def _():
                 ]
          )]
 _()
-
