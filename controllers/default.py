@@ -10,16 +10,16 @@
 #########################################################################
 
 def index():
-
+    
     if not request.args:
         rides = db().select(db.ride.ALL)
-    elif request.args[0] == 1:
+    elif request.args[0] == "1":
         rides = db().select(db.ride.ALL, orderby=db.ride.destination)
-    elif request.args[0] == 2:
+    elif request.args[0] == "2":
         rides = db().select(db.ride.ALL, orderby=db.ride.meeting_location)
-    elif request.args[0] == 3:
+    elif request.args[0] == "3":
         rides = db().select(db.ride.ALL, orderby=db.ride.departure_time)
-    elif request.args[0] == 4:
+    elif request.args[0] == "4":
         rides = db().select(db.ride.ALL, orderby=db.ride.price)
     else:
         rides = db().select(db.ride.ALL)
@@ -29,11 +29,7 @@ def index():
 def add():
     form = SQLFORM(db.ride)
     if form.process().accepted:
-        session.flash = T('inserted!')
         redirect(URL('index'))
-##    else:
-##        session.flash = T('Didnt work- Try again')
-##        redirect(URL('index'))
     return dict(form=form)
 
         
