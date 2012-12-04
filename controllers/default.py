@@ -10,65 +10,21 @@
 #########################################################################
 
 def index():
-    """
-    example action using the internationalization operator T and flash
-    rendered by views/default/index.html or views/generic.html
 
-    if you need a simple wiki simple replace the two lines below with:
-    return auth.wiki()
-    """
-    response.flash = T("Welcome to Santa Cruz ridesharing!")
-    rides = db().select(db.ride.ALL)
+    if not request.args:
+        rides = db().select(db.ride.ALL)
+    elif request.args[0] == 1:
+        rides = db().select(db.ride.ALL, orderby=db.ride.destination)
+    elif request.args[0] == 2:
+        rides = db().select(db.ride.ALL, orderby=db.ride.meeting_location)
+    elif request.args[0] == 3:
+        rides = db().select(db.ride.ALL, orderby=db.ride.departure_time)
+    elif request.args[0] == 4:
+        rides = db().select(db.ride.ALL, orderby=db.ride.price)
+    else:
+        rides = db().select(db.ride.ALL)
     return dict(ride=rides)
 
-def index1():
-
-    response.flash = T("Welcome to Santa Cruz ridesharing!")
-    rides = db().select(db.ride.ALL, orderby=db.ride.destination)
-    return dict(ride=rides)
-    
-def index2():
-
-    response.flash = T("Welcome to Santa Cruz ridesharing!")
-    rides = db().select(db.ride.ALL, orderby=db.ride.meeting_location)
-    return dict(ride=rides)
-    
-def index3():
-
-    response.flash = T("Welcome to Santa Cruz ridesharing!")
-    rides = db().select(db.ride.ALL, orderby=db.ride.departure_time)
-    return dict(ride=rides)
-    
-def index4():
-
-    response.flash = T("Welcome to Santa Cruz ridesharing!")
-    rides = db().select(db.ride.ALL, orderby=db.ride.price)
-    return dict(ride=rides)
-    
-def index5():
-
-    response.flash = T("Welcome to Santa Cruz ridesharing!")
-    rides = db().select(db.ride.ALL, orderby=~db.ride.destination)
-    return dict(ride=rides)
-    
-def index6():
-
-    response.flash = T("Welcome to Santa Cruz ridesharing!")
-    rides = db().select(db.ride.ALL, orderby=~db.ride.meeting_location)
-    return dict(ride=rides)
-    
-def index7():
-
-    response.flash = T("Welcome to Santa Cruz ridesharing!")
-    rides = db().select(db.ride.ALL, orderby=~db.ride.departure_time)
-    return dict(ride=rides)
-    
-def index8():
-
-    response.flash = T("Welcome to Santa Cruz ridesharing!")
-    rides = db().select(db.ride.ALL, orderby=~db.ride.price)
-    return dict(ride=rides)
-    
 @auth.requires_login()
 def add():
     form = SQLFORM(db.ride)
