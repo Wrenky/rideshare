@@ -40,6 +40,7 @@ input[type=text],input[type=password],select{width:300px; margin-right:5px}
 /* Sticky footer begin */
 
 .main {
+  background-color:#E6E6FA; /*damn you web2py*/
   padding:20px 0 50px 0;
 }
 

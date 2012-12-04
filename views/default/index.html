@@ -1,15 +1,47 @@
 {{extend 'layout.html'}}
-<P>
+<body bgcolor="#E6E6FA">
+<!--...
+<select name="Select_Table" size="1">
+	<option value="one_value">One</option>
+	<option value="two_value">Two</option>
+	<option value="three_value">Three</option>
+	<option value=" four_value">Four</option>
+</select>
+-->
+
 {{=A("Destination", _href=URL('index', args=[1]))}}
 {{=A("Meeting Place", _href=URL('index', args=[2]))}}
 {{=A("Time", _href=URL('index', args=[3]))}}
 {{=A("Price", _href=URL('index', args=[4]))}}
-
-<P>List of available rides: <P></P>
+<P><P>
+Here are some methods of displaying rides. We really need to modify the css or layout.html, but I just dont know how. Anyhoo,
+heres some different ways to lay out the data.
+<P><P>
+<hr>
+<P>Table of available rides: <P></P>
+<table border="1">
+<tr>
+<td>Destination</td>
+<td>Meeting Location</td>
+<td>Departure Time</td> 
+<td>Price</td>
+    </tr>
+{{for r in ride:}}
+    <tr>
+    <td>{{=A(r.destination, _href=URL('view', args=[r.id]))}}</td>
+    <td>{{=r.meeting_location}}</td>
+    <td>{{=r.departure_time}}</td>
+    <td>{{=r.price}}</td>
+    </tr>
+{{pass}}
+</table>
+<P><P><P>
+<hr>
+List of available rides: 
+<P></P>
 <ul>
 {{for r in ride:}}
-    <li>{{=A(r.destination, _href=URL('view', args=[r.id]))}}, leaving {{=r.meeting_location}} at {{=r.departure_time}}. Price: {{=r.price}}
-</li>
+    <li>{{=A(r.destination, _href=URL('view', args=[r.id]))}}, leaving {{=r.meeting_location}} at {{=r.departure_time}}. Price: {{=r.price}}</li>
 {{pass}}
 </ul>
 
