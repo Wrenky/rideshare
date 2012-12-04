@@ -5,9 +5,11 @@
 <ul>
     <li>Destination: {{=ride.destination}}</li>
     <li>Meeting Location:   {{=ride.meeting_location}}</li>
+    <li>Date:   {{=ride.departure_date}}</li>
     <li>Departure:   {{=ride.departure_time}}</li>
     <li>Price:       {{=ride.price}}</li>
     <li>Driver:      {{=A(ride.owner.first_name, " ", ride.owner.last_name, _href=URL('view_user', args=[ride.owner.id]))}}</li>
+    <li>Open Seats:       {{=ride.number_of_seats_open}}</li>
 </ul>
 
 <p>
