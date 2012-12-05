@@ -1,18 +1,15 @@
 {{extend 'layout.html'}}
 <body bgcolor="#E6E6FA">
-<!--...
-<select name="Select_Table" size="1">
-	<option value="one_value">One</option>
-	<option value="two_value">Two</option>
-	<option value="three_value">Three</option>
-	<option value=" four_value">Four</option>
-</select>
--->
 
-{{=A("Destination", _href=URL('index', args=[1]))}}
-{{=A("Meeting Place", _href=URL('index', args=[2]))}}
-{{=A("Time", _href=URL('index', args=[3]))}}
-{{=A("Price", _href=URL('index', args=[4]))}}
+    <select name="my_menu" id="my_menu" size="1" >
+    <option value="7"></option>
+	<option value="1">Destination</option>
+	<option value="2">Meeting Place</option>
+	<option value="3">Time</option>
+	<option value="4">Price</option>
+</select>
+<button type="button" onclick="window.location='/Ridshare/default/index/' + $( '#my_menu' ).val() + ''">Sort</button>
+
 <P><P>
 Here are some methods of displaying rides. We really need to modify the css or layout.html, but I just dont know how. Anyhoo,
 heres some different ways to lay out the data.
@@ -21,10 +18,10 @@ heres some different ways to lay out the data.
 <P>Table of available rides: <P></P>
 <table border="1">
 <tr>
-<td>Destination</td>
-<td>Meeting Location</td>
-<td>Departure Time</td> 
-<td>Price</td>
+ <td><B>Destination</B></td>
+<td><B>Meeting Location</B></td>
+<td><B>Departure Time</B></td> 
+<td><B>Price</B></td>
     </tr>
 {{for r in ride:}}
     <tr>
@@ -37,12 +34,5 @@ heres some different ways to lay out the data.
 </table>
 <P><P><P>
 <hr>
-List of available rides: 
-<P></P>
-<ul>
-{{for r in ride:}}
-    <li>{{=A(r.destination, _href=URL('view', args=[r.id]))}}, leaving {{=r.meeting_location}} at {{=r.departure_time}}. Price: {{=r.price}}</li>
-{{pass}}
-</ul>
 
 <p>{{=A('Add a ride!', _href=URL('add'))}}</p>
