@@ -62,9 +62,15 @@
        uncomment to load jquery-ui //-->
   <noscript><link href="{{=URL('static', 'css/web2py_bootstrap_nojs.css')}}" rel="stylesheet" type="text/css" /></noscript>
   {{block head}}{{end}}
+  
+
+  
+  
 </head>
 
 <body>
+background: url('images/ridesharebg.png');
+
   <!-- Navbar ================================================== -->
   <div class="navbar navbar-inverse navbar-fixed-top">
     <div class="flash">{{=response.flash or ''}}</div>
@@ -136,6 +142,7 @@
                 <div id="poweredBy" class="pull-right">
                     {{=T('Powered by')}}
                     <a href="http://www.web2py.com/">web2py</a>
+                    {{=T(', Coffee, and a severe lack of sleep')}}
                 </div>
                 {{end}}
             </div>
@@ -155,5 +162,6 @@
   {{if response.google_analytics_id:}}<script type="text/javascript"> var _gaq = _gaq || []; _gaq.push(['_setAccount', '{{=response.google_analytics_id}}']); _gaq.push(['_trackPageview']); (function() { var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true; ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js'; var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s); })(); </script> {{pass}}
   <script src="{{=URL('static','js/share.js',vars=dict(static=URL('static','images')))}}"></script>
 </body>
-</html>
 
+
+</html>

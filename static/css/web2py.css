@@ -44,6 +44,11 @@ input[type=text],input[type=password],select{width:300px; margin-right:5px}
   padding:20px 0 50px 0;
 }
 
+.view_notes {
+	float:right;
+	width: 50%;
+}
+
 .footer,.push {
   height:6em;
   padding:1em 0;

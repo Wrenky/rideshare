@@ -31,23 +31,50 @@ def add():
         redirect(URL('index'))
     return dict(form=form)
 
-#MUST INSERT INTO THE DB, GODDMANIT.      
+
+
 @auth.requires_login()
-def join():
-    user = db.auth_user(request.args[0]) or redirect(URL('index'))
+def join_ride():
+    user = db.auth_user(auth.user_id) or redirect(URL('index'))
     ride = db.ride(request.args(0)) or redirect(URL('index'))
-    ride.riders.append(user)
+    for u in ride.riders:
+        if( auth.user_id == u.id):
+            session.flash = T("You are already in this ride!")
+            redirect(URL('view', args=[ride.id]))
+
+    if (ride.number_of_seats_open <= 0):
+        session.flash = T("This ride has no open seats!")
+        redirect(URL('view', args=[ride.id]))
+
+    
+    ride.riders.append(user)  
     db.ride[ride.id] = dict(number_of_seats_open = ride.number_of_seats_open - 1)
-    session.flash = T("Type: " + str(type(ride.riders)) + "\nNumber of entries: " + str(len(ride.riders)))
     db.ride[ride.id] = dict(riders = ride.riders)
-    redirect(URL('index'))
+    redirect(URL('view', args=[ride.id]))
     return dict()
 
-       
+
+@auth.requires_login()
+def leave_ride():
+    user = db.auth_user(auth.user_id) or redirect(URL('index'))
+    ride = db.ride(request.args(0)) or redirect(URL('index'))
+    if(ride.owner.id == auth.user_id):
+        session.flash = T("You cannot leave your own ride! Please delete this ride.")
+        redirect(URL('view', args=[ride.id]))
+      
+    ride.riders.remove(user.id)
+    db.ride[ride.id] = dict(number_of_seats_open = ride.number_of_seats_open + 1)
+    db.ride[ride.id] = dict(riders = ride.riders)      
+    redirect(URL('view', args=[ride.id]))
+    return dict()
+
+
+              
 def view():
     rides = db.ride(request.args[0]) or redirect(URL('index'))
     return dict(ride=rides, user_id = auth.user_id)
-    
+
+        
 @auth.requires_login()
 def view_user():
      user = db.auth_user(request.args[0]) or redirect(URL('index'))
@@ -60,9 +87,11 @@ def download(): return response.download(request,db)
 @auth.requires_login()
 def delete():
     ride = db.ride(request.args[0]) or redirect(URL('index'))
+    
     if auth.user_id != ride.owner.id:
         session.flash = T("You cannot delete other people's rides!")
         redirect(URL('index'))
+        
     form = SQLFORM.factory(Field('Confirm_deletion', 'boolean', default=False))
     if form.process().accepted:
         db(db.ride.id == request.args[0]).delete()
