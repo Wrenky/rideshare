@@ -20,6 +20,8 @@ def index():
         rides = db().select(db.ride.ALL, orderby=db.ride.departure_time)
     elif request.args[0] == "4":
         rides = db().select(db.ride.ALL, orderby=db.ride.price)
+    elif request.args[0] == "5":
+        rides = db().select(db.ride.ALL, orderby=db.ride.number_of_seats_open)
     else:
         rides = db().select(db.ride.ALL)
     return dict(ride=rides)
@@ -69,7 +71,22 @@ def leave_ride():
     return dict()
 
 
-              
+def kick_rider():
+    user = db.auth_user(request.args(0)) or redirect(URL('index'))
+    session.flash = T("saaaaaaaadddddddddddd")
+    ride = db.ride(request.args(1)) or redirect(URL('index'))
+    if(auth.user_id != ride.owner.id):
+             session.flash = T("You cannot remove people from rides you do not own. Your account has been flagged.")
+             redirect(URL('view', args=[ride.id]))
+    
+    ride.riders.remove(user.id)
+    db.ride[ride.id] = dict(number_of_seats_open = ride.number_of_seats_open + 1)
+    db.ride[ride.id] = dict(riders = ride.riders)
+    session.flash = T("User " + str(user.first_name) + " " + str(user.last_name) + " has been removed from this ride.")
+    redirect(URL('view', args=[ride.id]))
+    return dict()
+             
+        
 def view():
     rides = db.ride(request.args[0]) or redirect(URL('index'))
     return dict(ride=rides, user_id = auth.user_id)

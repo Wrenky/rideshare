@@ -26,6 +26,12 @@
                 ({{=A('Leave?', _href=URL('leave_ride', args=[ride.id]))}})
                 </font>
             </li>
+      {{elif (user_id == ride.owner.id):}}
+  			<li>{{=A(user.first_name, " ", user.last_name, _href=URL('view_user', args=[user.id]))}} 
+                <font face= "arial" size="2">
+                ({{=A('kick', _href=URL('kick_rider', args=[user.id, ride.id]))}})
+                </font>
+            </li>
       {{else:}}
       		<li>{{=A(user.first_name, " ", user.last_name, _href=URL('view_user', args=[user.id]))}}</li>
       {{pass}}

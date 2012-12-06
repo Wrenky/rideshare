@@ -2,17 +2,14 @@
 
 
 <h1> {{=user.first_name}} {{=user.last_name}}</h1>
-<P>
 
+<div class="view_user_about_me">
+    <h3>About Me</h3>
+    {{=user.about_me}}
+</div>
 <img width="200px"
      src="{{=URL('download', args=user.profile_picture)}}" />
 
-<P>
-<center><h3>About Me:</h3></center>
-<P>
-<center>{{=user.about_me}}</center>
-<P>
+<hr>
 Contact me at:
-<P>
-{{=user.email}}
-<P>
+{{=user.email}}<br>
