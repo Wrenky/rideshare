@@ -5,12 +5,13 @@ db.define_table('ride',
                 Field('destination', 'string', requires=IS_NOT_EMPTY()),
                 Field('departure_date', 'date', requires=IS_DATE()),
                 Field('departure_time', 'time', requires=IS_TIME()),
-                Field('trip_length'),
-                Field('completed'),
+                Field('trip_length', 'string'),
                 Field('comments', 'text'),
-                Field('price'),
-                Field('number_of_seats_open', requires=IS_IN_SET(['0', '1', '2','3','4','5'])),
+                Field('price', 'string'),
+                Field('riders', 'list:reference auth_user', default=auth.user_id),
+                Field('number_of_seats_open', 'integer', requires=IS_IN_SET(['0', '1', '2','3','4','5'])),
                 Field('owner', db.auth_user, default=auth.user_id))
-                            
-db.ride.completed.writable = db.ride.completed.readable = False
+
+db.ride.riders.writable = db.ride.riders.readable = False
 db.ride.owner.writable = db.ride.owner.readable = False
+db.ride.id.readable = db.ride.id.writable = False

@@ -1,6 +1,7 @@
 {{extend 'layout.html'}}
 
-<h3>Details</h3>
+
+<h3>Ride Details</h3>
 <font face= "arial" size="4">
 <ul>
     <li>Destination: {{=ride.destination}}</li>
@@ -8,21 +9,31 @@
     <li>Date:   {{=ride.departure_date}}</li>
     <li>Departure:   {{=ride.departure_time}}</li>
     <li>Price:       {{=ride.price}}</li>
+    <li>TEST:        {{=ride.riders}}</li>
     <li>Driver:      {{=A(ride.owner.first_name, " ", ride.owner.last_name, _href=URL('view_user', args=[ride.owner.id]))}}</li>
     <li>Open Seats:       {{=ride.number_of_seats_open}}</li>
 </ul>
+<P><P>
+<h3>People in this ride:</h3>
+  <ol>
+  {{for user in ride.riders:}}
+  		<li>{{=A(user.first_name, " ", user.last_name, _href=URL('view_user', args=[user.id]))}}</li>
+   {{pass}}
+</ol>
 
+
+<p>Notes:<p>
+{{=ride.comments}}
 <p>
-    <h2>Notes:</h2>
-<p>
-    {{=ride.comments}}
-<p>    
-    
+
 </font>
 <font face= "arial" size="2">
 {{if ride.owner.id == user_id:}}
-  {{=(A('Delete this ride', _href=URL('delete', args=[ride.id])))}} 
+  {{=(A('Delete this ride', _href=URL('delete', args=[ride.id])))}}
   or
   {{=(A('Update this ride', _href=URL('update', args=[ride.id])))}}
 {{pass}}
 </font>
+<p><p>
+
+{{=(A('Want to come along? Join this ride!', _href=URL('join', args=[ride.id])))}}

@@ -1,7 +1,13 @@
 {{extend 'layout.html'}}
-<body bgcolor="#E6E6FA">
 
-    <select name="my_menu" id="my_menu" size="1" >
+
+<P><P>
+Here are some methods of displaying rides. We really need to modify the css or layout.html, but I just dont know how. Anyhoo,
+heres some different ways to lay out the data.
+<P><P>
+<hr>
+     
+<select name="my_menu" id="my_menu" size="1" >
     <option value="7"></option>
 	<option value="1">Destination</option>
 	<option value="2">Meeting Place</option>
@@ -10,11 +16,6 @@
 </select>
 <button type="button" onclick="window.location='/Ridshare/default/index/' + $( '#my_menu' ).val() + ''">Sort</button>
 
-<P><P>
-Here are some methods of displaying rides. We really need to modify the css or layout.html, but I just dont know how. Anyhoo,
-heres some different ways to lay out the data.
-<P><P>
-<hr>
 <P>Table of available rides: <P></P>
 <table border="1">
 <tr>
@@ -32,7 +33,6 @@ heres some different ways to lay out the data.
     </tr>
 {{pass}}
 </table>
-<P><P><P>
 <hr>
 
 <p>{{=A('Add a ride!', _href=URL('add'))}}</p>

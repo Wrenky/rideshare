@@ -10,7 +10,6 @@
 #########################################################################
 
 def index():
-    
     if not request.args:
         rides = db().select(db.ride.ALL)
     elif request.args[0] == "1":
@@ -32,7 +31,19 @@ def add():
         redirect(URL('index'))
     return dict(form=form)
 
-        
+#MUST INSERT INTO THE DB, GODDMANIT.      
+@auth.requires_login()
+def join():
+    user = db.auth_user(request.args[0]) or redirect(URL('index'))
+    ride = db.ride(request.args(0)) or redirect(URL('index'))
+    ride.riders.append(user)
+    db.ride[ride.id] = dict(number_of_seats_open = ride.number_of_seats_open - 1)
+    session.flash = T("Type: " + str(type(ride.riders)) + "\nNumber of entries: " + str(len(ride.riders)))
+    db.ride[ride.id] = dict(riders = ride.riders)
+    redirect(URL('index'))
+    return dict()
+
+       
 def view():
     rides = db.ride(request.args[0]) or redirect(URL('index'))
     return dict(ride=rides, user_id = auth.user_id)
@@ -66,7 +77,7 @@ def update():
     record = db.ride(request.args(0)) or redirect(URL('index'))
     form = SQLFORM(db.ride, record)
     if form.process().accepted:
-        session.flash = T('The item has been deleted')
+        session.flash = T('The item has been updated.')
         redirect(URL('index'))
     return dict(form=form)                
                                    
