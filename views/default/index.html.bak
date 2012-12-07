@@ -1,12 +1,43 @@
 {{extend 'layout.html'}}
-List of available rides: <P></P>
-<p><a href=index1>Destination</a> <a href= index2>Meeting Place</a> <a href=index3>Time</a> <a href=index4>Price</a></p>
 
-<ul>
+
+<P><P>
+Here are some methods of displaying rides. We really need to modify the css or layout.html, but I just dont know how. Anyhoo,
+heres some different ways to lay out the data.
+<P><P>
+<hr>
+     
+<select name="my_menu" id="my_menu" size="1" >
+    <option value="100">Choose an option!</option>
+	<option value="1">Destination</option>
+	<option value="2">Meeting Place</option>
+	<option value="3">Time</option>
+	<option value="4">Price</option>
+	<option value="5">Seats</option>
+</select>
+<button type="button" onclick="window.location='/Ridshare/default/index/' + $( '#my_menu' ).val() + ''">Sort</button>
+
+<P>Table of available rides: <P></P>
+<table border="1">
+<tr>
+ <td><B>Destination</B></td>
+<td><B>Meeting Location</B></td>
+<td><B>Departure Time</B></td> 
+<td><B>Price</B></td>
+<td><B>Seats</B></td>
+<td><B>Owner</B></td>
+    </tr>
 {{for r in ride:}}
-    <li>{{=A(r.destination, _href=URL('view', args=[r.id]))}}, leaving {{=r.meeting_location}} at {{=r.departure_time}}. Price: {{=r.price}}
-</li>
+    <tr>
+    <td>{{=A(r.destination, _href=URL('view', args=[r.id]))}}</td>
+    <td>{{=r.meeting_location}}</td>
+    <td>{{=r.departure_time}}</td>
+    <td>{{=r.price}}</td>
+    <td>{{=r.number_of_seats_open}}</td>
+        <td>{{=r.owner.first_name}}  {{=r.owner.last_name}}</td>
+    </tr>
 {{pass}}
-</ul>
+</table>
+<hr>
 
 <p>{{=A('Add a ride!', _href=URL('add'))}}</p>
