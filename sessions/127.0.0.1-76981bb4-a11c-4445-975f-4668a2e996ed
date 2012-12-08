@@ -50,7 +50,7 @@ p23
 (dp24
 S'hmac_key'
 p25
-S'52db8608-7f63-4101-95fd-c2bab3a40789'
+S'472464cd-9395-4439-900a-4759706a6793'
 p26
 sS'remember'
 p27
@@ -60,7 +60,7 @@ p28
 cdatetime
 datetime
 p29
-(S'\x07\xdc\x0c\x07\x0f"\x17\x08%\xf0'
+(S'\x07\xdc\x0c\x08\r\x1c:\n\x02\x80'
 tRp30
 sS'user'
 p31
@@ -81,7 +81,7 @@ I3600
 stRp38
 sS'_formkey[ride/create]'
 p39
-S'85d51f1f-76fe-4e74-9c8b-4090ce16b189'
+S'9d12ba47-858f-4920-843c-51ec199687e1'
 p40
 sS'_formkey[no_table/create]'
 p41
@@ -89,6 +89,6 @@ S'36b84984-1323-4cb3-ae5d-687ee4c75b5e'
 p42
 sS'_formkey[login]'
 p43
-S'4c678c24-bc66-4e1d-b1e8-e44d80ffc67f'
+S'94aa35a4-f386-4c7b-9c8b-7029cf498ff1'
 p44
 s.
