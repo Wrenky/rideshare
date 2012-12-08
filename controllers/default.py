@@ -33,7 +33,17 @@ def add():
         redirect(URL('index'))
     return dict(form=form)
 
-
+@auth.requires_login()
+def add_comment():
+    rides = db.ride(request.args[0]) or redirect(URL('index'))
+    user = db.auth_user(auth.user_id) or redirect(URL('index'))
+    form = SQLFORM.factory(
+    Field('comment', 'text', requires=IS_NOT_EMPTY())
+    )
+    if form.process().accepted:
+        rides.update_record(comments = rides.comments + 'From: ' + str(user.first_name) + ' ' + str(user.last_name) + ':\n' + form.vars.comment + '----------\n') 
+        redirect(URL('view', args=[rides.id])) 
+    return dict(rides=rides, user_id = auth.user_id, form = form, sesion=session)
 
 @auth.requires_login()
 def join_ride():

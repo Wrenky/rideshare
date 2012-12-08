@@ -10,57 +10,102 @@
 #########################################################################
 
 def index():
-    """
-    example action using the internationalization operator T and flash
-    rendered by views/default/index.html or views/generic.html
-
-    if you need a simple wiki simple replace the two lines below with:
-    return auth.wiki()
-    """
-    response.flash = T("Welcome to Santa Cruz ridesharing!")
-    rides = db().select(db.ride.ALL)
+    if not request.args:
+        rides = db().select(db.ride.ALL)
+    elif request.args[0] == "1":
+        rides = db().select(db.ride.ALL, orderby=db.ride.destination)
+    elif request.args[0] == "2":
+        rides = db().select(db.ride.ALL, orderby=db.ride.meeting_location)
+    elif request.args[0] == "3":
+        rides = db().select(db.ride.ALL, orderby=db.ride.departure_time)
+    elif request.args[0] == "4":
+        rides = db().select(db.ride.ALL, orderby=db.ride.price)
+    elif request.args[0] == "5":
+        rides = db().select(db.ride.ALL, orderby=db.ride.number_of_seats_open)
+    else:
+        rides = db().select(db.ride.ALL)
     return dict(ride=rides)
 
-def index1():
-
-    response.flash = T("Welcome to Santa Cruz ridesharing!")
-    rides = db().select(db.ride.ALL, orderby=db.ride.destination)
-    return dict(ride=rides)
-    
-def index2():
-
-    response.flash = T("Welcome to Santa Cruz ridesharing!")
-    rides = db().select(db.ride.ALL, orderby=db.ride.meeting_location)
-    return dict(ride=rides)
-    
-def index3():
-
-    response.flash = T("Welcome to Santa Cruz ridesharing!")
-    rides = db().select(db.ride.ALL, orderby=db.ride.departure_time)
-    return dict(ride=rides)
-    
-def index4():
-
-    response.flash = T("Welcome to Santa Cruz ridesharing!")
-    rides = db().select(db.ride.ALL, orderby=db.ride.meeting_location)
-    return dict(ride=rides)
-    
 @auth.requires_login()
 def add():
     form = SQLFORM(db.ride)
     if form.process().accepted:
-        session.flash = T('inserted!')
         redirect(URL('index'))
-##    else:
-##        session.flash = T('Didnt work- Try again')
-##        redirect(URL('index'))
     return dict(form=form)
 
+@auth.requires_login()
+def add_comment():
+    rides = db.ride(request.args[0]) or redirect(URL('index'))
+    user = db.auth_user(auth.user_id) or redirect(URL('index'))
+    form = SQLFORM.factory(
+    Field('comment', 'text', requires=IS_NOT_EMPTY())
+    )
+    if form.process().accepted:
+        rides.update_record(comments = 'From: ' + str(user.first_name) + ' ' + str(user.last_name) + ':\n' + form.vars.comment + '----------\n') 
+        redirect(URL('view', args=[rides.id])) 
+    return dict(rides=rides, user_id = auth.user_id, form = form, sesion=session)
+
+@auth.requires_login()
+def join_ride():
+    user = db.auth_user(auth.user_id) or redirect(URL('index'))
+    ride = db.ride(request.args(0)) or redirect(URL('index'))
+    for u in ride.riders:
+        if( auth.user_id == u.id):
+            session.flash = T("You are already in this ride!")
+            redirect(URL('view', args=[ride.id]))
+
+    if (ride.number_of_seats_open <= 0):
+        session.flash = T("This ride has no open seats!")
+        redirect(URL('view', args=[ride.id]))
+
+    mail.send(str(ride.owner.email),
+      'UCSC Rideshare automated message',
+      'Hello ' + str(ride.owner.first_name)+",\n"+ " " + str(user.first_name) + " " + str(user.last_name) + ' has requested to join your ride')
+      
+    session.flash = T(str(ride.owner.email))  
+    ride.riders.append(user)  
+    db.ride[ride.id] = dict(number_of_seats_open = ride.number_of_seats_open - 1)
+    db.ride[ride.id] = dict(riders = ride.riders)
+    redirect(URL('view', args=[ride.id]))
+    return dict()
+
+
+@auth.requires_login()
+def leave_ride():
+    user = db.auth_user(auth.user_id) or redirect(URL('index'))
+    ride = db.ride(request.args(0)) or redirect(URL('index'))
+    if(ride.owner.id == auth.user_id):
+        session.flash = T("You cannot leave your own ride! Please delete this ride.")
+        redirect(URL('view', args=[ride.id]))
+      
+    ride.riders.remove(user.id)
+    db.ride[ride.id] = dict(number_of_seats_open = ride.number_of_seats_open + 1)
+    db.ride[ride.id] = dict(riders = ride.riders)      
+    redirect(URL('view', args=[ride.id]))
+    return dict()
+
+
+def kick_rider():
+    user = db.auth_user(request.args(0)) or redirect(URL('index'))
+    session.flash = T("saaaaaaaadddddddddddd")
+    ride = db.ride(request.args(1)) or redirect(URL('index'))
+    if(auth.user_id != ride.owner.id):
+             session.flash = T("You cannot remove people from rides you do not own. Your account has been flagged.")
+             redirect(URL('view', args=[ride.id]))
+    
+    ride.riders.remove(user.id)
+    db.ride[ride.id] = dict(number_of_seats_open = ride.number_of_seats_open + 1)
+    db.ride[ride.id] = dict(riders = ride.riders)
+    session.flash = T("User " + str(user.first_name) + " " + str(user.last_name) + " has been removed from this ride.")
+    redirect(URL('view', args=[ride.id]))
+    return dict()
+             
         
 def view():
     rides = db.ride(request.args[0]) or redirect(URL('index'))
     return dict(ride=rides, user_id = auth.user_id)
-    
+
+        
 @auth.requires_login()
 def view_user():
      user = db.auth_user(request.args[0]) or redirect(URL('index'))
@@ -73,9 +118,11 @@ def download(): return response.download(request,db)
 @auth.requires_login()
 def delete():
     ride = db.ride(request.args[0]) or redirect(URL('index'))
+    
     if auth.user_id != ride.owner.id:
         session.flash = T("You cannot delete other people's rides!")
         redirect(URL('index'))
+        
     form = SQLFORM.factory(Field('Confirm_deletion', 'boolean', default=False))
     if form.process().accepted:
         db(db.ride.id == request.args[0]).delete()
@@ -90,7 +137,7 @@ def update():
     record = db.ride(request.args(0)) or redirect(URL('index'))
     form = SQLFORM(db.ride, record)
     if form.process().accepted:
-        session.flash = T('The item has been deleted')
+        session.flash = T('The item has been updated.')
         redirect(URL('index'))
     return dict(form=form)                
                                    

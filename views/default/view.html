@@ -2,7 +2,6 @@
 
 <div class="view_notes">
 	<h3>Notes</h3>
-	{{=ride.comments}}
 	<br>
 </div>
 <h3>Ride Details</h3>
@@ -38,6 +37,16 @@
    {{pass}}
 </ol>
 </font>
+
+{{for user in ride.riders:}}
+	{{if (user.id == user_id):}}
+		<h2>{{=A("Add a comment", _href=URL('add_comment', args=[ride.id]))}}</h2>
+			{{break}}
+{{pass}}
+
+{{=ride.comments}}
+
+
 
 <br>{{=(A('Want to come along? Join this ride!', _href=URL('join_ride', args=[ride.id])))}}<br>
 

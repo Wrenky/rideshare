@@ -1,24 +1,59 @@
 {{extend 'layout.html'}}
 
-<h3>Details</h3>
+<div class="view_notes">
+	<h3>Notes</h3
+	<br>
+</div>
+<h3>Ride Details</h3>
 <font face= "arial" size="4">
 <ul>
     <li>Destination: {{=ride.destination}}</li>
+    <li>Meeting Location:   {{=ride.meeting_location}}</li>
+    <li>Date:   {{=ride.departure_date}}</li>
     <li>Departure:   {{=ride.departure_time}}</li>
     <li>Price:       {{=ride.price}}</li>
     <li>Driver:      {{=A(ride.owner.first_name, " ", ride.owner.last_name, _href=URL('view_user', args=[ride.owner.id]))}}</li>
+    <li>Open Seats:       {{=ride.number_of_seats_open}}</li>
 </ul>
-
-<p>
-    <h2>Notes:</h2>
-<p>
-    {{=ride.comments}}
-<p>    
-    
+<br><br>
+<h3>People in this ride:</h3>
+  <ol>
+  {{for user in ride.riders:}}
+      {{if(user.id == user_id):}}
+  			<li>{{=A(user.first_name, " ", user.last_name, _href=URL('view_user', args=[user.id]))}} 
+                <font face= "arial" size="2">
+                ({{=A('Leave?', _href=URL('leave_ride', args=[ride.id]))}})
+                </font>
+            </li>
+      {{elif (user_id == ride.owner.id):}}
+  			<li>{{=A(user.first_name, " ", user.last_name, _href=URL('view_user', args=[user.id]))}} 
+                <font face= "arial" size="2">
+                ({{=A('kick', _href=URL('kick_rider', args=[user.id, ride.id]))}})
+                </font>
+            </li>
+      {{else:}}
+      		<li>{{=A(user.first_name, " ", user.last_name, _href=URL('view_user', args=[user.id]))}}</li>
+      {{pass}}
+   {{pass}}
+</ol>
 </font>
+
+{{for user in ride.riders:}}
+	{{if (user.id == user_id):}}
+		<h2>{{=A("Add a comment", _href=URL('add_comment', args=[ride.id]))}}</h2>
+			{{break}}
+{{pass}}
+
+{{=ride.comments}}
+
+
+
+<br>{{=(A('Want to come along? Join this ride!', _href=URL('join_ride', args=[ride.id])))}}<br>
+
+
 <font face= "arial" size="2">
 {{if ride.owner.id == user_id:}}
-  {{=(A('Delete this ride', _href=URL('delete', args=[ride.id])))}} 
+  {{=(A('Delete this ride', _href=URL('delete', args=[ride.id])))}}
   or
   {{=(A('Update this ride', _href=URL('update', args=[ride.id])))}}
 {{pass}}
