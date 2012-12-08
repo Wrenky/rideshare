@@ -43,7 +43,7 @@ response.generic_patterns = ['*'] if request.is_local else []
 
 
 
-from gluon.tools import Auth, Crud, Service, PluginManager, prettydate
+from gluon.tools import Auth, Crud, Service, PluginManager, prettydate, Mail
 auth = Auth(db)
 crud, service, plugins = Crud(db), Service(), PluginManager()
 
@@ -59,9 +59,9 @@ auth.define_tables(username=False, signature=False)
 
 ## configure email
 mail=auth.settings.mailer
-mail.settings.server = 'logging' or 'smtp.gmail.com:587'
-mail.settings.sender = 'you@gmail.com'
-mail.settings.login = 'username:password'
+mail.settings.server = 'smtp.gmail.com:587'
+mail.settings.sender = 'UCSCrideshare@gmail.com'
+mail.settings.login = 'UCSCrideshare:cheesepizza'
 
 ## configure auth policy
 auth.settings.registration_requires_verification = False

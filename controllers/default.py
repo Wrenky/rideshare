@@ -48,7 +48,11 @@ def join_ride():
         session.flash = T("This ride has no open seats!")
         redirect(URL('view', args=[ride.id]))
 
-    
+    mail.send(str(ride.owner.email),
+      'UCSC Rideshare automated message',
+      'Hello ' + str(ride.owner.first_name)+",\n"+ " " + str(user.first_name) + " " + str(user.last_name) + ' has requested to join your ride')
+      
+    session.flash = T(str(ride.owner.email))  
     ride.riders.append(user)  
     db.ride[ride.id] = dict(number_of_seats_open = ride.number_of_seats_open - 1)
     db.ride[ride.id] = dict(riders = ride.riders)
