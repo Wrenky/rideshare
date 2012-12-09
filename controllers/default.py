@@ -60,7 +60,7 @@ def join_ride():
 
     mail.send(str(ride.owner.email),
       'UCSC Rideshare automated message',
-      'Hello ' + str(ride.owner.first_name)+",\n"+ " " + str(user.first_name) + " " + str(user.last_name) + ' has requested to join your ride')
+      'Hello ' + str(ride.owner.first_name)+",\n"+ " " + str(user.first_name) + " " + str(user.last_name) + ' has joined your ride going to ' + str(ride.destination) + ' from ' +str(ride.meeting_location) + ' on ' + str(ride.departure_date))
       
     session.flash = T(str(ride.owner.email))  
     ride.riders.append(user)  
@@ -79,6 +79,9 @@ def leave_ride():
         redirect(URL('view', args=[ride.id]))
       
     ride.riders.remove(user.id)
+    mail.send(str(ride.owner.email),
+      'UCSC Rideshare automated message',
+           'Hello ' + str(ride.owner.first_name)+",\n"+ " " + str(user.first_name) + " " + str(user.last_name) + ' has left your ride going to ' + str(ride.destination) + ' from ' +str(ride.meeting_location) + ' on ' + str(ride.departure_date))
     db.ride[ride.id] = dict(number_of_seats_open = ride.number_of_seats_open + 1)
     db.ride[ride.id] = dict(riders = ride.riders)      
     redirect(URL('view', args=[ride.id]))
@@ -134,11 +137,18 @@ def delete():
                             
 @auth.requires_login()
 def update():
+    user = db.auth_user(auth.user_id) or redirect(URL('index'))
     record = db.ride(request.args(0)) or redirect(URL('index'))
     form = SQLFORM(db.ride, record)
     if form.process().accepted:
-        session.flash = T('The item has been updated.')
-        redirect(URL('index'))
+        #for riders in record:
+            mail.send(str(user.email),
+            'UCSC Rideshare automated message',
+            'Hello ' + str(user.first_name)+",\n" + str(record.owner.first_name) + " " + str(record.owner.last_name) + ' has updated your ride')
+            session.flash = T('The item has been updated.')
+            redirect(URL('index'))
+        
+  
     return dict(form=form)                
                                    
     
