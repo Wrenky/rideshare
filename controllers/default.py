@@ -35,15 +35,22 @@ def add():
 
 @auth.requires_login()
 def add_comment():
-    rides = db.ride(request.args[0]) or redirect(URL('index'))
+    ride = db.ride(request.args[0]) or redirect(URL('index'))
     user = db.auth_user(auth.user_id) or redirect(URL('index'))
     form = SQLFORM.factory(
     Field('comment', 'text', requires=IS_NOT_EMPTY())
     )
     if form.process().accepted:
-        rides.update_record(comments = rides.comments + 'From: ' + str(user.first_name) + ' ' + str(user.last_name) + ':\n' + form.vars.comment + '----------\n') 
-        redirect(URL('view', args=[rides.id])) 
-    return dict(rides=rides, user_id = auth.user_id, form = form, sesion=session)
+        string = str((str(user.first_name) + ' ' + str(user.last_name) + ": " + str(form.vars.comment)))
+        if( ride.user_comments == None): 
+            ride.user_comments = [string]
+            ride.update_record(user_comments = ride.user_comments)
+        else:
+            ride.user_comments.append(string)
+            session.flash = T(str(ride.user_comments) + "  " + str(type(ride.user_comments)) + str(type(string)))
+            ride.update_record(user_comments = ride.user_comments)
+        redirect(URL('view', args=[ride.id])) 
+    return dict(rides=ride, user_id = auth.user_id, form = form, sesion=session)
 
 @auth.requires_login()
 def join_ride():
@@ -61,8 +68,6 @@ def join_ride():
     mail.send(str(ride.owner.email),
       'UCSC Rideshare automated message',
       'Hello ' + str(ride.owner.first_name)+",\n"+ " " + str(user.first_name) + " " + str(user.last_name) + ' has joined your ride going to ' + str(ride.destination) + ' from ' +str(ride.meeting_location) + ' on ' + str(ride.departure_date))
-      
-    session.flash = T(str(ride.owner.email))  
     ride.riders.append(user)  
     db.ride[ride.id] = dict(number_of_seats_open = ride.number_of_seats_open - 1)
     db.ride[ride.id] = dict(riders = ride.riders)
@@ -90,7 +95,6 @@ def leave_ride():
 
 def kick_rider():
     user = db.auth_user(request.args(0)) or redirect(URL('index'))
-    session.flash = T("saaaaaaaadddddddddddd")
     ride = db.ride(request.args(1)) or redirect(URL('index'))
     if(auth.user_id != ride.owner.id):
              session.flash = T("You cannot remove people from rides you do not own. Your account has been flagged.")

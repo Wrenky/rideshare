@@ -1,11 +1,27 @@
-{{extend 'layout.html'}}
+<style type="text/css">
+<!--
+.view_notes {
+    float: right;
+    width: 40%;
+}
+.comments {
+    float: right;
+    width: 40%;    
+}
+-->
+</style>
 
+
+{{extend 'layout.html'}}
 <div class="view_notes">
 	<h3>Notes</h3>
+	{{=ride.comments}}
 	<br>
 </div>
+
+
 <h3>Ride Details</h3>
-<font face= "arial" size="4">
+<font face= "arial" size="3">
 <ul>
     <li>Destination: {{=ride.destination}}</li>
     <li>Meeting Location:   {{=ride.meeting_location}}</li>
@@ -16,6 +32,22 @@
     <li>Open Seats:       {{=ride.number_of_seats_open}}</li>
 </ul>
 <br><br>
+<div class="comments">
+    <h3>Comments:</h3>
+    {{for comment in ride.user_comments:}}
+    	{{=comment}}<br>
+    {{pass}}
+
+<br><br>
+	{{for user in ride.riders:}}
+		{{if (user.id == user_id):}}
+			<h3>{{=A("Add a comment", _href=URL('add_comment', args=[ride.id]))}}</h3>
+				{{break}}
+    {{pass}}
+
+<br>
+
+</div>
 <h3>People in this ride:</h3>
   <ol>
   {{for user in ride.riders:}}
@@ -37,16 +69,6 @@
    {{pass}}
 </ol>
 </font>
-
-{{for user in ride.riders:}}
-	{{if (user.id == user_id):}}
-		<h2>{{=A("Add a comment", _href=URL('add_comment', args=[ride.id]))}}</h2>
-			{{break}}
-{{pass}}
-
-{{=ride.comments}}
-
-
 
 <br>{{=(A('Want to come along? Join this ride!', _href=URL('join_ride', args=[ride.id])))}}<br>
 
