@@ -1,12 +1,5 @@
 {{extend 'layout.html'}}
-
-
-<P><P>
-Here are some methods of displaying rides. We really need to modify the css or layout.html, but I just dont know how. Anyhoo,
-heres some different ways to lay out the data.
-<P><P>
 <hr>
-     
 <select name="my_menu" id="my_menu" size="1" >
     <option value="100">Choose an option!</option>
 	<option value="1">Destination</option>
@@ -17,6 +10,15 @@ heres some different ways to lay out the data.
 </select>
 <button type="button" onclick="window.location='/rideshare/default/index/' + $( '#my_menu' ).val() + ''">Sort</button>
 
+
+{{=form}}
+
+
+<!--
+	We display our rides in a table, so multiple rides can be displayed in the 
+	same format. I want to try putting the rides in a  <div> setup, but it hasnt
+	been working out yet. 
+-->
 <P>Table of available rides: <P></P>
 <table border="1">
 <tr>

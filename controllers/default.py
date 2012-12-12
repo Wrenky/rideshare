@@ -2,14 +2,13 @@
 # this file is released under public domain and you can use without limitations
 
 #########################################################################
-## This is a samples controller
-## - index is the default action of any application
-## - user is required for authentication and authorization
-## - download is for downloading files uploaded in the db (does streaming)
-## - call exposes all registered services (none by default)
+## Index - Handles the main sort and search ability, as well as functions 
+##         as our website's main page.
+##
 #########################################################################
-
 def index():
+    
+    #Sort is ugly because of how python rejects case-switch statements.
     if not request.args:
         rides = db().select(db.ride.ALL)
     elif request.args[0] == "1":
@@ -24,8 +23,46 @@ def index():
         rides = db().select(db.ride.ALL, orderby=db.ride.number_of_seats_open)
     else:
         rides = db().select(db.ride.ALL)
-    return dict(ride=rides)
+        
+        
+    # Search form for our search box. 
+    form = SQLFORM.factory(
+                  Field("search", "string", default=""),
+                  formstyle='divs',
+                  submit_button="Search",
+                  )
+    
+    # NOTE: SEARCH INVALIDATES ANY SORT OPTIONS. THEY CAN'T BE USED TOGETHER.
+    # If the search button is pressed, we perform a search on the strings.
+    # Its an intresting way of doing things, using | to "OR" the requests 
+    # together to give results. So far we search Destination, Meeting 
+    # Location, Price, and the comments section. 
+    if form.process().accepted:
+         if (form.vars.search != "" ):
+             search_terms = (form.vars.search).split()
+             for i,term in enumerate(search_terms):
+                 subquery=db.ride.destination.lower().like('%'+term.lower()+'%')
+                 query=query|subquery if i else subquery
+                 subquery=db.ride.meeting_location.lower().like('%'+term.lower()+'%')
+                 query=query|subquery
+                 subquery=db.ride.price.lower().like('%'+term.lower()+'%')
+                 query=query|subquery
+                 subquery=db.ride.comments.lower().like('%'+term.lower()+'%')
+                 query=query|subquery
+             rides = db(db.ride.id.belongs(db(query)._select(db.ride.id))).select()
+         else:
+           session.flash = T("Please enter a valid search term.")
+           redirect(URL('index'))
+           
+    return dict(form=form, ride=rides)    
 
+
+
+
+#########################################################################
+## add - Adds a ride into the database. 
+##
+#########################################################################
 @auth.requires_login()
 def add():
     form = SQLFORM(db.ride)
@@ -33,6 +70,12 @@ def add():
         redirect(URL('index'))
     return dict(form=form)
 
+
+#########################################################################
+## add_comment - Adds a comment into the ride section, appended with the
+##               commenters name.
+##
+#########################################################################
 @auth.requires_login()
 def add_comment():
     ride = db.ride(request.args[0]) or redirect(URL('index'))
@@ -41,17 +84,21 @@ def add_comment():
     Field('comment', 'text', requires=IS_NOT_EMPTY())
     )
     if form.process().accepted:
-        string = str((str(user.first_name) + ' ' + str(user.last_name) + ": " + str(form.vars.comment)))
         if( ride.user_comments == None): 
             ride.user_comments = [string]
             ride.update_record(user_comments = ride.user_comments)
         else:
             ride.user_comments.append(string)
-            session.flash = T(str(ride.user_comments) + "  " + str(type(ride.user_comments)) + str(type(string)))
             ride.update_record(user_comments = ride.user_comments)
         redirect(URL('view', args=[ride.id])) 
     return dict(rides=ride, user_id = auth.user_id, form = form, sesion=session)
 
+
+#########################################################################
+## join_ride - Adds the user to the ride. Sends an email to the ride 
+##             owner.
+##
+#########################################################################
 @auth.requires_login()
 def join_ride():
     user = db.auth_user(auth.user_id) or redirect(URL('index'))
@@ -75,6 +122,11 @@ def join_ride():
     return dict()
 
 
+#########################################################################
+## leave_ride - Removes the user from the ride. Sends another email.
+## 
+##
+#########################################################################
 @auth.requires_login()
 def leave_ride():
     user = db.auth_user(auth.user_id) or redirect(URL('index'))
@@ -93,6 +145,12 @@ def leave_ride():
     return dict()
 
 
+
+#########################################################################
+## kick_rider - Kicks the user in question from the ride. Only the ride
+##              owner can do this.
+##
+#########################################################################
 def kick_rider():
     user = db.auth_user(request.args(0)) or redirect(URL('index'))
     ride = db.ride(request.args(1)) or redirect(URL('index'))
@@ -107,25 +165,46 @@ def kick_rider():
     redirect(URL('view', args=[ride.id]))
     return dict()
              
-        
+#########################################################################
+## view - View a ride. Prints out everything about the ride.
+##
+##
+#########################################################################
 def view():
     rides = db.ride(request.args[0]) or redirect(URL('index'))
     return dict(ride=rides, user_id = auth.user_id)
 
-        
+
+
+#########################################################################
+## view_user - View a users profile.
+##
+##
+#########################################################################      
 @auth.requires_login()
 def view_user():
      user = db.auth_user(request.args[0]) or redirect(URL('index'))
      return dict(user = user)
 
 
+
+#########################################################################
+## download - uploads a picture into the database for user profile.
+##
+##
+######################################################################### 
 def download(): return response.download(request,db)
 
 
+
+#########################################################################
+## delete - Delete ride from the database. Only the ride owner can do  
+##          this.
+##
+######################################################################### 
 @auth.requires_login()
 def delete():
     ride = db.ride(request.args[0]) or redirect(URL('index'))
-    
     if auth.user_id != ride.owner.id:
         session.flash = T("You cannot delete other people's rides!")
         redirect(URL('index'))
@@ -138,7 +217,13 @@ def delete():
         redirect(URL('index'))
     return dict(form=form, ride=ride, user=auth.user)
 
+ 
                             
+#########################################################################
+## update - Update a ride.EMAIL IS WRONG.
+##
+##
+#########################################################################                       
 @auth.requires_login()
 def update():
     user = db.auth_user(auth.user_id) or redirect(URL('index'))
@@ -155,7 +240,15 @@ def update():
   
     return dict(form=form)                
                                    
+
     
+#########################################################################
+## The rest of the fuctions we did not write, but were auto-generated by
+## web2py.
+##
+#########################################################################    
+                    
+                            
 def user():
     """
     exposes:
@@ -171,14 +264,6 @@ def user():
     to decorate functions that need access control
     """
     return dict(form=auth())
-
-
-def download():
-    """
-    allows downloading of uploaded files
-    http://..../[app]/default/download/[filename]
-    """
-    return response.download(request,db)
 
 
 def call():
