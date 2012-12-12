@@ -8,7 +8,7 @@
 	<option value="4">Price</option>
 	<option value="5">Seats</option>
 </select>
-<button type="button" onclick="window.location='/rideshare/default/index/' + $( '#my_menu' ).val() + ''">Sort</button>
+<button type="button" onclick="window.location='index/' + $( '#my_menu' ).val() + ''">Sort</button>
 
 
 {{=form}}
@@ -19,27 +19,36 @@
 	same format. I want to try putting the rides in a  <div> setup, but it hasnt
 	been working out yet. 
 -->
-<P>Table of available rides: <P></P>
-<table border="1">
-<tr>
- <td><B>Destination</B></td>
-<td><B>Meeting Location</B></td>
-<td><B>Departure Time</B></td> 
-<td><B>Price</B></td>
-<td><B>Seats</B></td>
-<td><B>Owner</B></td>
+
+{{if (len(ride) != 0):}}
+	<P>Table of available rides: <P></P>
+	<table border="1">
+	<tr>
+ 	<td><B>Destination</B></td>
+	<td><B>Meeting Location</B></td>
+	<td><B>Departure Time</B></td> 
+	<td><B>Price</B></td>
+	<td><B>Seats</B></td>
+	<td><B>Owner</B></td>
     </tr>
-{{for r in ride:}}
-    <tr>
-    <td>{{=A(r.destination, _href=URL('view', args=[r.id]))}}</td>
-    <td>{{=r.meeting_location}}</td>
-    <td>{{=r.departure_time}}</td>
-    <td>{{=r.price}}</td>
-    <td>{{=r.number_of_seats_open}}</td>
+	{{for r in ride:}}
+    	<tr>
+    	<td>{{=A(r.destination, _href=URL('view', args=[r.id]))}}</td>
+    	<td>{{=r.meeting_location}}</td>
+    	<td>{{=r.departure_time}}</td>
+   	 	<td>{{=r.price}}</td>
+    	<td>{{=r.number_of_seats_open}}</td>
         <td>{{=r.owner.first_name}}  {{=r.owner.last_name}}</td>
-    </tr>
+    	</tr>
+	{{pass}}
+	</table>
+	<hr>
+{{else:}}
+<font face= "arial" size="3">
+	<br>
+	No rides exist! Do you want to {{=A('Add a ride?', _href=URL('add'))}}
+	<br>
+</font>
 {{pass}}
-</table>
-<hr>
 
 <p>{{=A('Add a ride!', _href=URL('add'))}}</p>
