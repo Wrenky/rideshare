@@ -226,14 +226,18 @@ def delete():
 #########################################################################                       
 @auth.requires_login()
 def update():
-    user = db.auth_user(auth.user_id) or redirect(URL('index'))
+    current_user = db.auth_user(auth.user_id) or redirect(URL('index'))
     record = db.ride(request.args(0)) or redirect(URL('index'))
     form = SQLFORM(db.ride, record)
     if form.process().accepted:
-        #for riders in record:
+        for user in record.riders:
+            if user.id == current_user.id: 
+                continue
             mail.send(str(user.email),
             'UCSC Rideshare automated message',
-            'Hello ' + str(user.first_name)+",\n" + str(record.owner.first_name) + " " + str(record.owner.last_name) + ' has updated your ride')
+            'Hello ' + str(user.first_name) + " " + str(user.last_name) + ",\n" + str(current_user.first_name) + " " 
+            + str(current_user.last_name) + ' has updated your ride, ' + 'Please log in to view the changes.' 
+            + '\nRegards,\nUCSC Ridshare')
             session.flash = T('The item has been updated.')
             redirect(URL('index'))
         
