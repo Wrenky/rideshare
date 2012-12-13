@@ -21,6 +21,8 @@ def index():
         rides = db().select(db.ride.ALL, orderby=db.ride.price)
     elif request.args[0] == "5":
         rides = db().select(db.ride.ALL, orderby=db.ride.number_of_seats_open)
+    elif request.args[0] == "6":
+        rides = db().select(db.ride.ALL, orderby=db.ride.departure_date)
     else:
         rides = db().select(db.ride.ALL)
         
@@ -84,13 +86,15 @@ def add_comment():
     Field('comment', 'text', requires=IS_NOT_EMPTY())
     )
     if form.process().accepted:
+        string = str(str(user.first_name) + ": " + form.vars.comment)
         if( ride.user_comments == None): 
             ride.user_comments = [string]
             ride.update_record(user_comments = ride.user_comments)
+            redirect(URL('view', args=[ride.id])) 
         else:
             ride.user_comments.append(string)
             ride.update_record(user_comments = ride.user_comments)
-        redirect(URL('view', args=[ride.id])) 
+            redirect(URL('view', args=[ride.id])) 
     return dict(rides=ride, user_id = auth.user_id, form = form, sesion=session)
 
 
@@ -238,10 +242,9 @@ def update():
             'Hello ' + str(user.first_name) + " " + str(user.last_name) + ",\n" + str(current_user.first_name) + " " 
             + str(current_user.last_name) + ' has updated your ride, ' + 'Please log in to view the changes.' 
             + '\nRegards,\nUCSC Ridshare')
-            session.flash = T('The item has been updated.')
-            redirect(URL('index'))
-        
-  
+
+    session.flash = T('The item has been updated.')
+    redirect(URL('index'))
     return dict(form=form)                
                                    
 
